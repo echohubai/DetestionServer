@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="detectionserver.dao.OrderDao">
+    <select id="findOrderById" resultType="detectionserver.model.Order" parameterType="int">
+        SELECT orderId,
+        userName,
+        phone,
+        address,
+        orderTime,
+        total,
+        userId,
+        state
+        FROM db.order
+        WHERE orderId = #{id} ORDER BY orderTime
+    </select>
+   <select id="getOrderItemsBySeller" resultType="detectionserver.model.OrderItem" parameterType="int">
+       SELECT count
+           ,subtotal
+           ,orderId
+           ,pid
+           ,sellerId
+           FROM orderitem
+          WHERE sellerId= #{sellerId}
+
+   </select>
+    <update id="update" parameterType="detectionserver.model.Order">
+        UPDATE db.order SET userName=#{userName},phone=#{phone},
+        address=#{address},total=#{total},state=#{state}
+        WHERE orderId=#{orderId}
+    </update>
+
+    <insert id="saveOrderItem" parameterType="detectionserver.model.OrderItem">
+        INSERT INTO db.orderItem(
+        count
+        ,subtotal
+        ,orderId
+        ,pid
+        ,sellerId)
+        VALUES (#{count},#{subtotal},#{orderId},#{pid},#{sellerId})
+    </insert>
+
+    <insert id="save"   >
+        INSERT INTO db.order(
+        orderId,
+        userName
+        ,phone
+        ,address
+        ,orderTime
+        ,total
+        ,userId
+        ,state)
+        VALUES (#{orderId},#{userName}, #{phone}, #{address},#{orderTime},#{total}, #{userId},#{state})
+    </insert>
+
+
+    <select id="findOrderItems" parameterType="int" resultType="detectionserver.model.OrderItem">
+        SELECT * FROM db.orderItem
+        WHERE orderId = #{id}
+    </select>
+
+    <select id="findCountByUid" parameterType="int" resultType="int">
+        SELECT count(*) FROM db.order WHERE userId = #{userId}
+    </select>
+
+    <select id="findPageByUid" resultType="detectionserver.model.Order">
+        select  * FROM db.order
+        where userId=#{userId} limit #{first},#{limit}
+    </select>
+    <select id="getOrderId" resultType="int">
+        SELECT * FROM db.order ORDER BY orderTime DESC
+    </select>
+    <select id="findSearch" resultType="detectionserver.model.Order">
+        SELECT * FROM `order`
+        where orderId like #{searchValue}
+    </select>
+</mapper>
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="detectionserver.dao.ParamDao">
+
+    <resultMap id="ParamBaseMap" type="detectionserver.model.Param">
+        <id column="pid" property="pid" jdbcType="BIGINT"/>
+        <result column="user" property="user" jdbcType="VARCHAR"/>
+        <result column="location" property="location" jdbcType="VARCHAR"/>
+        <result column="lat" property="lat" jdbcType="DOUBLE"/>
+        <result column="lon" property="lon" jdbcType="DOUBLE"/>
+        <result column="tm" property="tm" jdbcType="DOUBLE"/>
+        <result column="pm25" property="pm25" jdbcType="DOUBLE"/>
+        <result column="aqi" property="aqi" jdbcType="DOUBLE"/>
+        <result column="so" property="so" jdbcType="DOUBLE"/>
+        <result column="cho" property="cho" jdbcType="DOUBLE"/>
+        <result column="rh" property="rh" jdbcType="DOUBLE"/>
+        <result column="time" property="time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getParam" parameterType="java.lang.Long" resultMap="ParamBaseMap">
+        SELECT * FROM param;
+    </select>
+    <insert id="saveParam" parameterType="detectionserver.model.Param" >
+        insert into param(user, location, lat, lon, tm, `pm25`, aqi, so, cho, rh,time) values
+        (#{user},#{location},#{lat},#{lon},#{tm},#{pm25},#{aqi},#{so},#{cho},#{rh},#{time})
+    </insert>
+
+</mapper>

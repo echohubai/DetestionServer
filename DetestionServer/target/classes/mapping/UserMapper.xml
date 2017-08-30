@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="detectionserver.dao.UserDao">
+    <select id="selectNameById" resultType="String" parameterType="int">
+        SELECT userName FROM db.user WHERE userId = #{userId}
+    </select>
+
+    <select id="userLogin" resultType="detectionserver.model.StoreUser">
+        SELECT * FROM db.user WHERE userName = #{userName} AND pwd = #{pwd}
+    </select>
+
+    <select id="getUserById" resultType="detectionserver.model.StoreUser">
+        SELECT * FROM db.user WHERE userId = #{userId}
+    </select>
+
+    <select id="getAllUser" resultType="detectionserver.model.StoreUser">
+        SELECT userId,
+        userName,
+        pwd,
+        loginType
+        FROM db.user
+        ORDER BY userId
+    </select>
+
+    <update id="updateStoreUserById">
+        UPDATE db.user
+        SET userName = #{userName},
+
+        loginType = #{loginType}
+        WHERE userId = #{userId}
+    </update>
+
+    <update id="updateUserPwd" >
+        UPDATE db.user
+        SET pwd = #{pwd}
+        WHERE userId = #{userId}
+    </update>
+
+    <update id="updateStoreUser" parameterType="detectionserver.model.StoreUser">
+        UPDATE db.user
+        SET userName = #{userName},
+        pwd = #{pwd},
+        loginType = #{loginType},
+        address =#{address},
+        phone =#{phone},
+        email =#{email}
+        WHERE userId = #{userId}
+    </update>
+
+    <insert id="addStoreUser" parameterType="detectionserver.model.StoreUser">
+        INSERT INTO db.user(
+            userId,userName, pwd, loginType)
+        VALUES (#{userId},#{userName}, #{pwd}, #{loginType})
+    </insert>
+    <delete id="deleteUserById" parameterType="int">
+        DELETE FROM db.user
+        WHERE userId = #{userId}
+    </delete>
+
+</mapper>

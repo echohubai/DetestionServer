@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="detectionserver.dao.ProductDao">
+    <resultMap id="ProductBaseMap" type="detectionserver.model.Product">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="itemId" property="itemId" jdbcType="SMALLINT"/>
+        <result column="groupId" property="groupId" jdbcType="SMALLINT"/>
+        <result column="itemName" property="itemName" jdbcType="VARCHAR"/>
+        <result column="sellerName" property="sellerName" jdbcType="VARCHAR"/>
+        <result column="sellerId" property="sellerId" jdbcType="SMALLINT"/>
+        <result column="prize" property="prize" jdbcType="SMALLINT"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="SMALLINT"/>
+        <result column="isHot" property="isHot" jdbcType="SMALLINT"/>
+        <result column="createTime" property="createTime" jdbcType="DATE"></result>
+    </resultMap>
+    <select id="getSellerIdByPid" resultType="int" parameterType="int">
+        SELECT sellerId
+        FROM db.product WHERE itemId = #{itemId}
+    </select>
+    <select id="getProductsBySeller" resultType="detectionserver.model.Product" parameterType="int">
+        SELECT itemId,
+        groupId,
+        itemName,
+        sellerName,
+        sellerId,
+        prize,
+        description,
+        count
+        FROM db.product
+        WHERE sellerId = #{sellerId}
+        ORDER by itemId
+    </select>
+    <select id="findNew" resultMap="ProductBaseMap">
+        select  *from product  order by createTime DESC
+    </select>
+
+    <select id="findHot" resultType="detectionserver.model.Product">
+        select  * from product  WHERE isHot = 1 ORDER BY itemId DESC
+    </select>
+
+    <select id="findByPid" resultType="detectionserver.model.Product" parameterType="int">
+        select  * from product  where itemId = #{itemId}
+    </select>
+
+    <update id="updateProduct" parameterType="detectionserver.model.Product">
+        UPDATE product SET itemName=#{itemName},prize=#{prize},
+        description=#{description},count=#{count},isHot=#{isHot}
+        WHERE itemId=#{itemId}
+    </update>
+
+    <update id="updateProductById" parameterType="detectionserver.model.Product">
+        UPDATE product SET itemName=#{itemName},prize=#{prize},
+        description=#{description},count=#{count}
+        WHERE itemId=#{itemId}
+    </update>
+
+    <select id="findSearch" resultType="detectionserver.model.Product">
+        SELECT * FROM product
+        where itemName like #{searchValue}
+    </select>
+
+    <insert id="addProduct" parameterType="detectionserver.model.Product">
+        INSERT INTO product (
+        itemId,
+        groupId
+        ,itemName
+        ,sellerName
+        ,sellerId
+        ,prize
+        ,description
+        ,count
+        ,isHot
+        ,createTime
+        )
+        VALUES (#{itemId},#{groupId}, #{itemName},#{sellerName}, #{sellerId},#{prize},
+        #{description}, #{count},#{isHot},#{createTime})
+    </insert>
+
+    <delete id="deleteByItemId" parameterType="int">
+        DELETE FROM product
+        WHERE itemId = #{itemId}
+    </delete>
+
+
+
+    <select id="findByCid" resultType="detectionserver.model.Product" parameterType="int">
+        SELECT * FROM product WHERE groupId = #{cid}
+    </select>
+
+    <select id="findCnameByCid" resultType="String" parameterType="int">
+        SELECT cname FROM category WHERE cid = #{cid}
+    </select>
+
+
+</mapper>
